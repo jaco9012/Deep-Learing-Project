@@ -39,10 +39,14 @@ from utils import make_env, Storage, orthogonal_init
 from labml_helpers.module import Module
 from labml_nn.rl.ppo.gae import GAE
 
+if torch.cuda.is_available():
+    device = torch.device("cuda:0")
+else:
+    device = torch.device("cpu")
+
 class Flatten(nn.Module):
     def forward(self, x):
         return x.view(x.size(0), -1)
-
 
 class Encoder(nn.Module):
   def __init__(self, in_channels, feature_dim):
@@ -169,7 +173,7 @@ while step < total_steps:
 
       # Clipped policy objective
       pi_loss = 
-
+      
       # Clipped value function objective
       value_loss = 
 
