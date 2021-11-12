@@ -10,14 +10,9 @@ Original file is located at
 
 Here's a bit of code that should help you get started on your projects.
 
-The cell below installs `procgen` and downloads a small `utils.py` script that contains some utility functions. You may want to inspect the file for more details.
+Hyperparameters. 
+These values should be a good starting point. You can modify them later once you have a working implementation.
 """
-
-!pip install procgen
-!wget https://raw.githubusercontent.com/nicklashansen/ppo-procgen-utils/main/utils.py
-
-"""Hyperparameters. These values should be a good starting point. You can modify them later once you have a working implementation."""
-
 # Hyperparameters
 total_steps = 8e6
 num_envs = 32
@@ -30,13 +25,17 @@ grad_eps = .5
 value_coef = .5
 entropy_coef = .01
 
-"""Network definitions. We have defined a policy network for you in advance. It uses the popular `NatureDQN` encoder architecture (see below), while policy and value functions are linear projections from the encodings. There is plenty of opportunity to experiment with architectures, so feel free to do that! Perhaps implement the `Impala` encoder from [this paper](https://arxiv.org/pdf/1802.01561.pdf) (perhaps minus the LSTM)."""
+"""
+Network definitions. 
+We have defined a policy network for you in advance. It uses the popular `NatureDQN` encoder architecture (see below),
+while policy and value functions are linear projections from the encodings. There is plenty of opportunity to experiment with architectures,
+so feel free to do that! Perhaps implement the `Impala` encoder from [this paper](https://arxiv.org/pdf/1802.01561.pdf) (perhaps minus the LSTM).
+"""
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
-
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -57,7 +56,6 @@ class Encoder(nn.Module):
 
   def forward(self, x):
     return self.layers(x)
-
 
 class Policy(nn.Module):
   def __init__(self, encoder, feature_dim, num_actions):
@@ -86,7 +84,7 @@ class Policy(nn.Module):
 
 # Define environment
 # check the utils.py file for info on arguments
-env = make_env(num_envs, num_levels=num_levels)
+env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
 print('Observation space:', env.observation_space)
 print('Action space:', env.action_space.n)
 
