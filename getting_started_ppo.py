@@ -36,6 +36,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
+from labml_helpers.module import Module
+from labml_nn.rl.ppo.gae import GAE
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -81,6 +83,22 @@ class Policy(nn.Module):
 
     return dist, value
 
+class ClippedPPOLoss(Module):
+  def __init__(self):
+    super().__init__()
+  def forward(self, log_pi: torch.Tensor, sampled_log_pi: torch.Tensor,advantage: torch.Tensor, clip: float) -> torch.Tensor:
+    ratio = torch.exp(log_pi - sampled_log_pi)
+    clipped_ratio = ratio.clamp(min=1.0 - clip,max=1.0 + clip)
+    policy_reward = torch.min(ratio * advantage,clipped_ratio * advantage)
+    self.clip_fraction = (abs((ratio - 1.0)) > clip).to(torch.float).mean()
+    return -policy_reward.mean()
+
+class ClippedValueFunctionLoss(Module):
+  def forward(self, value: torch.Tensor, sampled_value: torch.Tensor, sampled_return: torch.Tensor, clip: float):
+    clipped_value = sampled_value + (value - sampled_value).clamp(min=-clip, max=clip)
+    vf_loss = torch.max((value - sampled_return) ** 2, (clipped_value - sampled_return) ** 2)
+    return 0.5 * vf_loss.mean()
+
 
 # Define environment
 # check the utils.py file for info on arguments
@@ -89,8 +107,9 @@ print('Observation space:', env.observation_space)
 print('Action space:', env.action_space.n)
 
 # Define network
-encoder = 
-policy = 
+# Define network
+encoder = Encoder(in_channels=3, feature_dim=4096)
+policy = Policy(encoder=encoder, feature_dim=4096, num_actions=env.action_space.n)
 policy.cuda()
 
 # Define optimizer
@@ -104,6 +123,9 @@ storage = Storage(
     num_steps,
     num_envs
 )
+
+PPO_loss = ClippedPPOLoss()
+value_loss = ClippedValueFunctionLoss()
 
 # Run training
 obs = env.reset()
