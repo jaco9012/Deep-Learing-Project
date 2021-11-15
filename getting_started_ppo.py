@@ -22,6 +22,7 @@ num_epochs = 3
 batch_size = 512
 eps = .2
 grad_eps = .5
+clip_value = .1
 value_coef = .5
 entropy_coef = .01
 
@@ -36,13 +37,15 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
-from labml_helpers.module import Module
-from labml_nn.rl.ppo.gae import GAE
+from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
-if torch.cuda.is_available():
-    device = torch.device("cuda:0")
-else:
-    device = torch.device("cpu")
+# from labml_helpers.module import Module
+#from labml_nn.rl.ppo.gae import GAE
+
+# if torch.cuda.is_available():
+#     device = torch.device("cuda:0")
+# else:
+#     device = torch.device("cpu")
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -87,21 +90,21 @@ class Policy(nn.Module):
 
     return dist, value
 
-class ClippedPPOLoss(Module):
-  def __init__(self):
-    super().__init__()
-  def forward(self, log_pi: torch.Tensor, sampled_log_pi: torch.Tensor,advantage: torch.Tensor, clip: float) -> torch.Tensor:
-    ratio = torch.exp(log_pi - sampled_log_pi)
-    clipped_ratio = ratio.clamp(min=1.0 - clip,max=1.0 + clip)
-    policy_reward = torch.min(ratio * advantage,clipped_ratio * advantage)
-    self.clip_fraction = (abs((ratio - 1.0)) > clip).to(torch.float).mean()
-    return -policy_reward.mean()
+# class ClippedPPOLoss(Module):
+#   def __init__(self):
+#     super().__init__()
+#   def forward(self, log_pi: torch.Tensor, sampled_log_pi: torch.Tensor,advantage: torch.Tensor, clip: float) -> torch.Tensor:
+#     ratio = torch.exp(log_pi - sampled_log_pi)
+#     clipped_ratio = ratio.clamp(min=1.0 - clip,max=1.0 + clip)
+#     policy_reward = torch.min(ratio * advantage,clipped_ratio * advantage)
+#     self.clip_fraction = (abs((ratio - 1.0)) > clip).to(torch.float).mean()
+#     return -policy_reward.mean()
 
-class ClippedValueFunctionLoss(Module):
-  def forward(self, value: torch.Tensor, sampled_value: torch.Tensor, sampled_return: torch.Tensor, clip: float):
-    clipped_value = sampled_value + (value - sampled_value).clamp(min=-clip, max=clip)
-    vf_loss = torch.max((value - sampled_return) ** 2, (clipped_value - sampled_return) ** 2)
-    return 0.5 * vf_loss.mean()
+# class ClippedValueFunctionLoss(Module):
+#   def forward(self, value: torch.Tensor, sampled_value: torch.Tensor, sampled_return: torch.Tensor, clip: float):
+#     clipped_value = sampled_value + (value - sampled_value).clamp(min=-clip, max=clip)
+#     vf_loss = torch.max((value - sampled_return) ** 2, (clipped_value - sampled_return) ** 2)
+#     return 0.5 * vf_loss.mean()
 
 
 # Define environment
@@ -128,8 +131,8 @@ storage = Storage(
     num_envs
 )
 
-PPO_loss = ClippedPPOLoss()
-value_loss = ClippedValueFunctionLoss()
+#PPO_loss = ClippedPPOLoss()
+#value_loss = ClippedValueFunctionLoss()
 
 # Run training
 obs = env.reset()
@@ -172,16 +175,17 @@ while step < total_steps:
       new_log_prob = new_dist.log_prob(b_action)
 
       # Clipped policy objective
-      pi_loss = 
+      pi_loss = ClippedPPOLoss(log_pi=new_log_prob, samlped_log_pi=b_log_prob, advantage=b_advantage, clip=clip_value)
       
       # Clipped value function objective
-      value_loss = 
+      value_loss = ClippedValueFunctionLoss(value=new_value, sampled_value=b_value, clip=clip_value)
 
       # Entropy loss
-      entropy_loss = 
+      entropy_loss = new_dist.entropy()
+      entropy_loss = entropy_loss.mean()
 
       # Backpropagate losses
-      loss = 
+      loss = (pi_loss + value_coef * value_loss - entropy_coef * entropy_loss) 
       loss.backward()
 
       # Clip gradients
