@@ -14,17 +14,18 @@ Hyperparameters.
 These values should be a good starting point. You can modify them later once you have a working implementation.
 """
 # Hyperparameters
-total_steps = 8e6
+total_steps = 1e3
 num_envs = 32
 num_levels = 10
 num_steps = 256
-num_epochs = 3
+num_epochs = 1
 batch_size = 512
 eps = .2
 grad_eps = .5
 clip_value = .1
 value_coef = .5
 entropy_coef = .01
+
 
 """
 Network definitions. 
@@ -131,8 +132,8 @@ storage = Storage(
     num_envs
 )
 
-#PPO_loss = ClippedPPOLoss()
-#value_loss = ClippedValueFunctionLoss()
+clipped_PPO_loss = ClippedPPOLoss()
+clipped_value_loss = ClippedValueFunctionLoss()
 
 # Run training
 obs = env.reset()
@@ -175,10 +176,10 @@ while step < total_steps:
       new_log_prob = new_dist.log_prob(b_action)
 
       # Clipped policy objective
-      pi_loss = ClippedPPOLoss(log_pi=new_log_prob, samlped_log_pi=b_log_prob, advantage=b_advantage, clip=clip_value)
+      pi_loss = clipped_PPO_loss(log_pi=new_log_prob, sampled_log_pi=b_log_prob, advantage=b_advantage, clip=clip_value)
       
       # Clipped value function objective
-      value_loss = ClippedValueFunctionLoss(value=new_value, sampled_value=b_value, clip=clip_value)
+      value_loss = clipped_value_loss(value=new_value, sampled_value=b_value, sampled_return=b_returns, clip=clip_value)
 
       # Entropy loss
       entropy_loss = new_dist.entropy()
@@ -200,14 +201,19 @@ while step < total_steps:
   print(f'Step: {step}\tMean reward: {storage.get_reward()}')
 
 print('Completed training!')
-torch.save(policy.state_dict, 'checkpoint.pt')
+torch.save(policy.state_dict(), 'checkpoint.pt')
 
 """Below cell can be used for policy evaluation and saves an episode to mp4 for you to view."""
 
+env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
+encoder = Encoder(in_channels=3, feature_dim=4096)
+policy = Policy(encoder=encoder, feature_dim=4096, num_actions=env.action_space.n)
+policy.cuda()
+policy.load_state_dict(torch.load('checkpoint.pt'))
 import imageio
 
 # Make evaluation environment
-eval_env = make_env(num_envs, start_level=num_levels, num_levels=num_levels)
+eval_env = make_env(num_envs, start_level=num_levels, num_levels=num_levels, env_name='coinrun')
 obs = eval_env.reset()
 
 frames = []
