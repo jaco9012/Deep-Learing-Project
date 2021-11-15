@@ -14,7 +14,7 @@ Hyperparameters.
 These values should be a good starting point. You can modify them later once you have a working implementation.
 """
 # Hyperparameters
-total_steps = 10
+total_steps = 1e4
 num_envs = 32
 num_levels = 10
 num_steps = 256
@@ -138,22 +138,29 @@ clipped_value_loss = ClippedValueFunctionLoss()
 # Run training
 obs = env.reset()
 step = 0
+total_training_reward = []
+
 while step < total_steps:
 
   # Use policy to collect data for num_steps steps
   policy.eval()
+  # training_reward = []
   for _ in range(num_steps):
     # Use policy
     action, log_prob, value = policy.act(obs)
     
     # Take step in environment
     next_obs, reward, done, info = env.step(action)
+    # training_reward.append(torch.Tensor(reward))
 
     # Store data
     storage.store(obs, action, reward, done, info, log_prob, value)
     
     # Update current observation
     obs = next_obs
+  
+  # Calculate average return
+  # total_training_reward.append(torch.stack(training_reward).sum(0).mean(0))
 
   # Add the last observation to collected data
   _, _, value = policy.act(obs)
@@ -197,11 +204,12 @@ while step < total_steps:
       optimizer.zero_grad()
 
   # Update stats
+  total_training_reward.append(storage.get_reward())
   step += num_envs * num_steps
   print(f'Step: {step}\tMean reward: {storage.get_reward()}')
 
 print('Completed training!')
-torch.save(policy.state_dict(), 'checkpoints/checkpoint2.pt')
+torch.save(policy.state_dict(), 'checkpoints/checkpoint.pt')
 
 """Below cell can be used for policy evaluation and saves an episode to mp4 for you to view."""
 
@@ -218,6 +226,7 @@ obs = eval_env.reset()
 
 frames = []
 total_reward = []
+val_reward = []
 
 # Evaluate policy
 policy.eval()
@@ -228,14 +237,14 @@ for _ in range(100):
 
   # Take step in environment
   obs, reward, done, info = eval_env.step(action)
-  total_reward.append(torch.Tensor(reward))
+  val_reward.append(torch.Tensor(reward))
 
   # Render environment and store
   frame = (torch.Tensor(eval_env.render(mode='rgb_array'))*255.).byte()
   frames.append(frame)
 
 # Calculate average return
-total_reward = torch.stack(total_reward).sum(0).mean(0)
+total_reward = torch.stack(val_reward).sum(0).mean(0)
 print('Average return:', total_reward)
 
 # Save frames as video
