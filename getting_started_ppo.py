@@ -14,7 +14,7 @@ Hyperparameters.
 These values should be a good starting point. You can modify them later once you have a working implementation.
 """
 # Hyperparameters
-total_steps = 1e3
+total_steps = 10
 num_envs = 32
 num_levels = 10
 num_steps = 256
@@ -201,15 +201,15 @@ while step < total_steps:
   print(f'Step: {step}\tMean reward: {storage.get_reward()}')
 
 print('Completed training!')
-torch.save(policy.state_dict(), 'checkpoint.pt')
+torch.save(policy.state_dict(), 'checkpoints/checkpoint2.pt')
 
 """Below cell can be used for policy evaluation and saves an episode to mp4 for you to view."""
 
-env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
-encoder = Encoder(in_channels=3, feature_dim=4096)
-policy = Policy(encoder=encoder, feature_dim=4096, num_actions=env.action_space.n)
-policy.cuda()
-policy.load_state_dict(torch.load('checkpoint.pt'))
+# env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
+# encoder = Encoder(in_channels=3, feature_dim=4096)
+# policy = Policy(encoder=encoder, feature_dim=4096, num_actions=env.action_space.n)
+# policy.cuda()
+# policy.load_state_dict(torch.load('checkpoints/checkpoint.pt'))
 import imageio
 
 # Make evaluation environment
@@ -221,7 +221,7 @@ total_reward = []
 
 # Evaluate policy
 policy.eval()
-for _ in range(512):
+for _ in range(100):
 
   # Use policy
   action, log_prob, value = policy.act(obs)
@@ -240,4 +240,4 @@ print('Average return:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('vid.mp4', frames, fps=25)
+imageio.mimsave('videos/vid2.mp4', frames, fps=25)
