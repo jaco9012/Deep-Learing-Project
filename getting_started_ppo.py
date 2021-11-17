@@ -14,11 +14,11 @@ Hyperparameters.
 These values should be a good starting point. You can modify them later once you have a working implementation.
 """
 # Hyperparameters
-total_steps = 1e4
+total_steps = 1e6
 num_envs = 32
 num_levels = 10
 num_steps = 256
-num_epochs = 1
+num_epochs = 3
 batch_size = 512
 eps = .2
 grad_eps = .5
