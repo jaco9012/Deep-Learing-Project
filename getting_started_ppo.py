@@ -14,7 +14,7 @@ Hyperparameters.
 These values should be a good starting point. You can modify them later once you have a working implementation.
 """
 # Hyperparameters
-total_steps = 1e6
+total_steps = 1e4
 num_envs = 32
 num_levels = 10
 num_steps = 256
@@ -33,7 +33,7 @@ We have defined a policy network for you in advance. It uses the popular `Nature
 while policy and value functions are linear projections from the encodings. There is plenty of opportunity to experiment with architectures,
 so feel free to do that! Perhaps implement the `Impala` encoder from [this paper](https://arxiv.org/pdf/1802.01561.pdf) (perhaps minus the LSTM).
 """
-
+import pickle
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -210,6 +210,8 @@ while step < total_steps:
 
 print('Completed training!')
 torch.save(policy.state_dict(), 'checkpoints/checkpoint.pt')
+
+
 
 """Below cell can be used for policy evaluation and saves an episode to mp4 for you to view."""
 
