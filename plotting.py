@@ -63,4 +63,4 @@ print('Average return:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('videos/vid2.mp4', frames, fps=25)
+imageio.mimsave('videos/baselineModel.mp4', frames, fps=25)
