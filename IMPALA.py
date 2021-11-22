@@ -6,6 +6,7 @@
 # so feel free to do that! Perhaps implement the `Impala` encoder from [this paper](https://arxiv.org/pdf/1802.01561.pdf) (perhaps minus the LSTM).
 
 
+from math import sqrt
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -13,17 +14,18 @@ from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
-total_steps = 20e6
-num_envs = 32
-num_levels = 10
+total_steps = 25e6
+num_envs = 64
+num_levels = 200
 num_steps = 256
 num_epochs = 3
 batch_size = 512
 eps = .2
 grad_eps = .5
-clip_value = .1
+clip_value = .2
 value_coef = .5
 entropy_coef = .01
+gamma = 0.999
 
 m=nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 input = torch.randn(32, 20, 20)
@@ -110,14 +112,15 @@ policy.cuda()
 
 # Define optimizer
 # these are reasonable values but probably not optimal
-optimizer = torch.optim.Adam(policy.parameters(), lr=5e-4, eps=1e-5)
+optimizer = torch.optim.Adam(policy.parameters(), lr=5e-4*1/sqrt(3), eps=1e-5)
 
 # Define temporary storage
 # we use this to collect transitions during each iteration
 storage = Storage(
     env.observation_space.shape,
     num_steps,
-    num_envs
+    num_envs,
+    gamma = gamma
 )
 
 clipped_PPO_loss = ClippedPPOLoss()
@@ -190,8 +193,8 @@ while step < total_steps:
   total_training_reward.append(storage.get_reward())
   step += num_envs * num_steps
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/IMPALA.pt')
-    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA.pt')
+    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc.pt')
+    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc.pt')
 
 print('Completed training!')
 #torch.save(policy.state_dict(), 'checkpoints/checkpoint.pt')

@@ -12,15 +12,19 @@ def moving_average(a, n=10) :
     ret[n:] = ret[n:] - ret[:-n]
     return ret / n
 
-total_training_reward = torch.load('trainingResults/training_Reward.pt')
+total_training_reward_baseline = torch.load('trainingResults/training_Reward.pt')
+total_training_reward_IMPALA = torch.load('trainingResults/training_Reward_IMPALA.pt')
 
-x_val = range(8192, (len(total_training_reward)+1)*8192, 8192)
+x_val_baseline = range(8192, (len(total_training_reward_baseline)+1)*8192, 8192)
+x_val_IMPALA = range(8192, (len(total_training_reward_IMPALA)+1)*8192, 8192)
 
 plt.figure(figsize=(16,6))
-plt.plot(x_val, total_training_reward, label='total training reward')
-plt.plot(x_val,moving_average(total_training_reward), label = 'moving average')
+plt.plot(x_val_baseline, total_training_reward_baseline, label='total training reward baseline')
+plt.plot(x_val_baseline,moving_average(total_training_reward_baseline), label = 'moving average baseline')
+plt.plot(x_val_IMPALA, total_training_reward_IMPALA, label='total training reward IMPALA')
+plt.plot(x_val_IMPALA,moving_average(total_training_reward_IMPALA), label = 'moving average IMPALA')
 plt.xlabel('time steps'); plt.ylabel('reward')
-plt.xlim((0, max(x_val)*1.05))
+plt.xlim((0, max(x_val_baseline)*1.05))
 plt.legend(loc=4); plt.grid()
 plt.tight_layout(); plt.show()
 
@@ -28,14 +32,14 @@ plt.tight_layout(); plt.show()
 
 """Below cell can be used for policy evaluation and saves an episode to mp4 for you to view."""
 
-env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
+# obs you need to run the encoder and other stuff from the model it self.
 encoder = Encoder(in_channels=3, feature_dim=4096)
 policy = Policy(encoder=encoder, feature_dim=4096, num_actions=env.action_space.n)
 policy.cuda()
 policy.load_state_dict(torch.load('checkpoints/checkpoint.pt'))
 
 # Make evaluation environment
-eval_env = make_env(num_envs, start_level=num_levels, num_levels=num_levels, env_name='coinrun')
+eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun')
 obs = eval_env.reset()
 
 frames = []
