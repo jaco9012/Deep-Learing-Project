@@ -5,7 +5,7 @@ TDIR=$PWD
 ### –- specify queue --
 #BSUB -q gpuv100
 ### -- set the job Name --
-#BSUB -J IMPALA
+#BSUB -J baselineModel
 ### -- ask for number of cores (default: 1) --
 #BSUB -n 1
 ### -- Select the resources: 1 gpu in exclusive process mode --
@@ -38,4 +38,4 @@ module load cuda/10.2
 
 /appl/cuda/10.2/samples/NVIDIA_CUDA-10.2_Samples/bin/x86_64/linux/release/deviceQuery
 python3 -m pip install -r requirements.txt
-python3 IMPALA.py
+python3 baselineModel.py
