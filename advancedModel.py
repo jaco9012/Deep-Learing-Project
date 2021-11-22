@@ -14,7 +14,7 @@ from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
-total_steps = 25e6
+total_steps = 1e4
 num_envs = 64
 num_levels = 200
 num_steps = 256
