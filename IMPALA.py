@@ -112,7 +112,7 @@ policy.cuda()
 
 # Define optimizer
 # these are reasonable values but probably not optimal
-optimizer = torch.optim.Adam(policy.parameters(), lr=5e-4*1/sqrt(3), eps=1e-5)
+optimizer = torch.optim.Adam(policy.parameters(), lr=5e-4*1/sqrt(32/3), eps=1e-5)
 
 # Define temporary storage
 # we use this to collect transitions during each iteration
