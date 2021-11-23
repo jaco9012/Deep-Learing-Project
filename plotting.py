@@ -13,16 +13,16 @@ def moving_average(a, n=10) :
     return ret / n
 
 total_training_reward_baseline = torch.load('trainingResults/training_Reward_proc.pt')
-# total_training_reward_IMPALA = torch.load('trainingResults/training_Reward_IMPALA.pt')
+total_training_reward_IMPALA = torch.load('trainingResults/training_Reward_IMPALA_proc.pt')
 
-x_val_baseline = range(8192, (len(total_training_reward_baseline)+1)*8192, 8192)
-# x_val_IMPALA = range(8192, (len(total_training_reward_IMPALA)+1)*8192, 8192)
+x_val_baseline = range(8192*2, (len(total_training_reward_baseline)+1)*8192*2, 8192*2)
+x_val_IMPALA = range(8192*2, (len(total_training_reward_IMPALA)+1)*8192*2, 8192*2)
 
 plt.figure(figsize=(16,6))
 plt.plot(x_val_baseline, total_training_reward_baseline, label='total training reward baseline')
 plt.plot(x_val_baseline,moving_average(total_training_reward_baseline), label = 'moving average baseline')
-# plt.plot(x_val_IMPALA, total_training_reward_IMPALA, label='total training reward IMPALA')
-# plt.plot(x_val_IMPALA,moving_average(total_training_reward_IMPALA), label = 'moving average IMPALA')
+plt.plot(x_val_IMPALA, total_training_reward_IMPALA, label='total training reward IMPALA')
+plt.plot(x_val_IMPALA,moving_average(total_training_reward_IMPALA), label = 'moving average IMPALA')
 plt.xlabel('time steps'); plt.ylabel('reward')
 plt.xlim((0, max(x_val_baseline)*1.05))
 plt.legend(loc=4); plt.grid()
