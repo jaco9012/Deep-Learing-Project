@@ -16,7 +16,7 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 from data_augs import random_convolution
 
 # Hyperparameters
-total_steps = 1e4
+total_steps = 25e6
 num_envs = 64
 num_levels = 200
 num_steps = 256
@@ -204,8 +204,8 @@ while step < total_steps:
   total_training_reward.append(storage.get_reward())
   step += num_envs * num_steps
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc.pt')
-    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc.pt')
+    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
+    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_rand_conv.pt')
 
 print('Completed training!')
 #torch.save(policy.state_dict(), 'checkpoints/checkpoint.pt')

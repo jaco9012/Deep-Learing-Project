@@ -5,7 +5,7 @@ TDIR=$PWD
 ### –- specify queue --
 #BSUB -q gpuv100
 ### -- set the job Name --
-#BSUB -J IMPALA
+#BSUB -J IMPALA_rand_conv_aug
 ### -- ask for number of cores (default: 1) --
 #BSUB -n 1
 ### -- Select the resources: 1 gpu in exclusive process mode --
@@ -19,7 +19,7 @@ TDIR=$PWD
 # if you want to receive e-mail notifications on a non-default address
 ##BSUB -u
 ### -- send notification at start --
-##BSUB -B
+#BSUB -B
 ### -- send notification at completion--
 #BSUB -N
 ### -- Specify the output and error file. %J is the job-id --
