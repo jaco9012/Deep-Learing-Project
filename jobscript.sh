@@ -21,7 +21,7 @@ TDIR=$PWD
 ### -- send notification at start --
 ##BSUB -B
 ### -- send notification at completion--
-##BSUB -N
+#BSUB -N
 ### -- Specify the output and error file. %J is the job-id --
 ### -- -o and -e mean append, -oo and -eo mean overwrite --
 #BSUB -o logs/out/%J.out

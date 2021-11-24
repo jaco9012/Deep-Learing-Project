@@ -7,14 +7,16 @@
 
 
 from math import sqrt
+from random import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
+from data_augs import random_convolution
 
 # Hyperparameters
-total_steps = 25e6
+total_steps = 1e4
 num_envs = 64
 num_levels = 200
 num_steps = 256
@@ -27,9 +29,9 @@ value_coef = .5
 entropy_coef = .01
 gamma = 0.999
 
-m=nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-input = torch.randn(32, 20, 20)
-output = m(input)
+# m=nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+# input = torch.randn(32, 20, 20)
+# output = m(input)
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -131,11 +133,16 @@ obs = env.reset()
 step = 0
 total_training_reward = []
 
+augmentation="rand_conv"
+
 while step < total_steps:
 
   # Use policy to collect data for num_steps steps
   policy.eval()
   for _ in range(num_steps):
+    # apply data augmentation
+    if augmentation == "rand_conv":
+      obs = random_convolution(obs)
     # Use policy
     action, log_prob, value = policy.act(obs)
     
@@ -163,6 +170,10 @@ while step < total_steps:
     generator = storage.get_generator(batch_size)
     for batch in generator:
       b_obs, b_action, b_log_prob, b_value, b_returns, b_advantage = batch
+
+      # apply data augmentation
+      if augmentation == "rand_conv":
+        b_obs = random_convolution(b_obs)
 
       # Get current policy outputs
       new_dist, new_value = policy(b_obs)
