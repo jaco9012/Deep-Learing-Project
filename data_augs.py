@@ -1,6 +1,6 @@
 # file imported from https://github.com/MishaLaskin/rad authors: Michael Laskin and Kimin Lee
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 # from TransformLayer import ColorJitterLayer # import this from https://github.com/MishaLaskin/rad/blob/master/TransformLayer.py if we want to use the ColorJitterLayer augmentation. 
