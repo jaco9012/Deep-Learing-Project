@@ -13,7 +13,7 @@ def moving_average(a, n=10) :
     return ret / n
 
 total_training_reward_baseline = torch.load('trainingResults/training_Reward_proc.pt')
-total_training_reward_IMPALA = torch.load('trainingResults/training_Reward_IMPALA_proc.pt')
+total_training_reward_IMPALA = torch.load('trainingResults/training_Reward_IMPALA_proc_v2.pt')
 
 x_val_baseline = range(8192*2, (len(total_training_reward_baseline)+1)*8192*2, 8192*2)
 x_val_IMPALA = range(8192*2, (len(total_training_reward_IMPALA)+1)*8192*2, 8192*2)
