@@ -6,8 +6,8 @@
 # so feel free to do that! Perhaps implement the `Impala` encoder from [this paper](https://arxiv.org/pdf/1802.01561.pdf) (perhaps minus the LSTM).
 
 
-from math import sqrt
-from random import random
+from math import sqrt, exp
+from random import random, sample
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -15,23 +15,25 @@ from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 from data_augs import random_convolution
 
+
 # Hyperparameters
-total_steps = 25e6
+total_steps = 2e6
 num_envs = 64
-num_levels = 200
+num_levels = 0 # 0 = unlimited levels
 num_steps = 256
 num_epochs = 3
 batch_size = 512
 eps = .2
+eps_end = 0.05
+eps_start = 0.9
+eps_decay = 10e6
 grad_eps = .5
 clip_value = .2
 value_coef = .5
 entropy_coef = .01
 gamma = 0.999
 
-# m=nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-# input = torch.randn(32, 20, 20)
-# output = m(input)
+
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -88,9 +90,25 @@ class Policy(nn.Module):
       x = x.cuda().contiguous()
       dist, value = self.forward(x)
       action = dist.sample()
-      log_prob = dist.log_prob(action)
-    
+      log_prob = dist.log_prob(action)    
     return action.cpu(), log_prob.cpu(), value.cpu()
+
+  def act_gready(self, x):
+    with torch.no_grad():
+      x = x.cuda().contiguous()
+      dist, value = self.forward(x)
+      action = torch.argmax(dist)
+      log_prob = dist.log_prob(action)
+    return action.cpu(), log_prob.cpu(), value.cpu()
+
+  def select_act(self, x, eps_end, eps_start, eps_decay, step):
+    sample = random()
+    eps_threshold = eps_end + (eps_start - eps_end) * exp(-1 * step / eps_decay)
+    if sample > eps_threshold:
+      return self.act_gready(x) 
+    else:
+      return self.act(x)
+
 
   def forward(self, x):
     x = self.encoder(x)
@@ -132,11 +150,12 @@ clipped_value_loss = ClippedValueFunctionLoss()
 obs = env.reset()
 step = 0
 total_training_reward = []
+total_val_reward = []
 
-augmentation="rand_conv"
+augmentation="RIP og det var det"
 
 while step < total_steps:
-
+  val_reward = []
   # Use policy to collect data for num_steps steps
   policy.eval()
   for _ in range(num_steps):
@@ -148,6 +167,7 @@ while step < total_steps:
     
     # Take step in environment
     next_obs, reward, done, info = env.step(action)
+    val_reward.append(torch.Tensor(reward))
 
     # Store data
     storage.store(obs, action, reward, done, info, log_prob, value)
@@ -201,12 +221,17 @@ while step < total_steps:
       optimizer.zero_grad()
 
   # Update stats
-  total_training_reward.append(storage.get_reward())
+  # total_training_reward.append(storage.get_reward())
+  total_val_reward.append(torch.stack(val_reward).sum(0).mean(0))
   step += num_envs * num_steps
+
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
-    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_rand_conv.pt')
+    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
+    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
+    env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
+    obs = env.reset()
 
 print('Completed training!')
-#torch.save(policy.state_dict(), 'checkpoints/checkpoint.pt')
-#torch.save(total_training_reward, 'trainingResults/training_Reward.pt')
+
+torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
+torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
