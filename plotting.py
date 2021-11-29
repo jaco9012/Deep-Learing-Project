@@ -36,7 +36,7 @@ plt.tight_layout(); plt.show()
 encoder = Encoder(in_channels=3, feature_dim=4096) # IMPALA_feature_dim=256, baseline_proc_feature_dim=4096
 policy = Policy(encoder=encoder, feature_dim=4096, num_actions=env.action_space.n)
 policy.cuda()
-policy.load_state_dict(torch.load('checkpoints/IMPALA_proc.pt'))
+policy.load_state_dict(torch.load('checkpoints/IMPALA_proc_rand_conv.pt'))
 policy.load_state_dict(torch.load('checkpoints/baseline_proc.pt'))
 
 # Make evaluation environment
@@ -59,8 +59,8 @@ for _ in range(512):
   val_reward.append(torch.Tensor(reward))
 
   # Render environment and store
-  #frame = (torch.Tensor(eval_env.render(mode='rgb_array'))*255.).byte()
-  #frames.append(frame)
+  frame = (torch.Tensor(eval_env.render(mode='rgb_array'))*255.).byte()
+  frames.append(frame)
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
@@ -68,4 +68,4 @@ print('Average return:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('videos/IMPALA_proc.mp4', frames, fps=25)
+imageio.mimsave('videos/IMPALA_proc_rand_conv.mp4', frames, fps=25)
