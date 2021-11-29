@@ -5,7 +5,7 @@ TDIR=$PWD
 ### –- specify queue --
 #BSUB -q gpuv100
 ### -- set the job Name --
-#BSUB -J IMPALA_rand_conv_aug
+#BSUB -J IMPALA_v2
 ### -- ask for number of cores (default: 1) --
 #BSUB -n 1
 ### -- Select the resources: 1 gpu in exclusive process mode --
