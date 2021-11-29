@@ -227,7 +227,7 @@ while step < total_steps:
 
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
     torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
-    torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
+    torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
     env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
     obs = env.reset()
 
