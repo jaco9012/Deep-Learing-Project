@@ -128,8 +128,6 @@ class RandConv(nn.Module):
     torch.nn.init.xavier_normal_(self.randconv.weight.data)
 
   def RandConv(self, imgs):
-    _device = imgs.cpu()
-    
     img_h, img_w = imgs.shape[2], imgs.shape[3]
     num_stack_channel = imgs.shape[1]
     num_batch = imgs.shape[0]
