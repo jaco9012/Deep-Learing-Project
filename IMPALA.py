@@ -254,10 +254,10 @@ while step < total_steps:
   step += num_envs * num_steps
 
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
-    torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
+    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
+    torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
 
 print('Completed training!')
 
-torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
-torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
+torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
+torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
