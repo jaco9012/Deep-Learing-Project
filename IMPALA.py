@@ -11,14 +11,13 @@ from random import random, sample
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from plot_data_augs import get_numpy, show_imgs
 from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
-from data_augs import random_convolution
+
 
 
 # Hyperparameters
-total_steps = 2e6
+total_steps = 20e6
 num_envs = 64
 num_levels = 0 # 0 = unlimited levels
 num_steps = 256
@@ -110,7 +109,6 @@ class Policy(nn.Module):
     else:
       return self.act(x)
 
-
   def forward(self, x):
     x = self.encoder(x)
     logits = self.policy(x)
@@ -119,15 +117,16 @@ class Policy(nn.Module):
 
     return dist, value
 
-
 class RandConv(nn.Module):
   def __init__(self, num_batch):
     super().__init__()
     
-    self.randconv = nn.Conv2d(3, 3, kernel_size=3, bias=False, padding=1).cpu()
+    self.randconv = nn.Conv2d(3, 3, kernel_size=3, bias=False, padding=1)
     torch.nn.init.xavier_normal_(self.randconv.weight.data)
 
-  def RandConv(self, imgs):
+  def RandomConvolution(self, imgs):
+    _device = imgs.device
+    self.randconv.to(_device)
     img_h, img_w = imgs.shape[2], imgs.shape[3]
     num_stack_channel = imgs.shape[1]
     num_batch = imgs.shape[0]
@@ -180,7 +179,7 @@ step = 0
 total_training_reward = []
 total_val_reward = []
 
-augmentation="RIP og det var det"
+augmentation="rand_conv"
 
 while step < total_steps:
   randConvGenerator = RandConv(num_batch=64)
@@ -190,7 +189,7 @@ while step < total_steps:
   for _ in range(num_steps):
     # apply data augmentation
     if augmentation == "rand_conv":
-      obs = randConvGenerator(obs)
+      obs = randConvGenerator.RandomConvolution(obs)
     # Use policy
     action, log_prob, value = policy.act(obs)
     
@@ -222,7 +221,7 @@ while step < total_steps:
 
       # apply data augmentation
       if augmentation == "rand_conv":
-        b_obs = randConvGenerator(b_obs)
+        b_obs = randConvGenerator.RandomConvolution(b_obs)
 
       # Get current policy outputs
       new_dist, new_value = policy(b_obs)
@@ -258,8 +257,7 @@ while step < total_steps:
     torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
     torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
 
-
 print('Completed training!')
 
 torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
-torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
+torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
