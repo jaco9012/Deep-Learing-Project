@@ -7,6 +7,8 @@
 
 
 # from math import gamma
+from math import sqrt, exp
+from random import random, sample
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
