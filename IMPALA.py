@@ -257,6 +257,8 @@ while step < total_steps:
     torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
     torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
 
+    
+
 print('Completed training!')
 
 torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
