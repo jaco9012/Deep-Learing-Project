@@ -13,11 +13,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
-from data_augs import random_convolution
+
 
 
 # Hyperparameters
-total_steps = 2e6
+total_steps = 20e6
 num_envs = 64
 num_levels = 0 # 0 = unlimited levels
 num_steps = 256
@@ -109,7 +109,6 @@ class Policy(nn.Module):
     else:
       return self.act(x)
 
-
   def forward(self, x):
     x = self.encoder(x)
     logits = self.policy(x)
@@ -117,6 +116,34 @@ class Policy(nn.Module):
     dist = torch.distributions.Categorical(logits=logits)
 
     return dist, value
+
+class RandConv(nn.Module):
+  def __init__(self, num_batch):
+    super().__init__()
+    
+    self.randconv = nn.Conv2d(3, 3, kernel_size=3, bias=False, padding=1)
+    torch.nn.init.xavier_normal_(self.randconv.weight.data)
+
+  def RandomConvolution(self, imgs):
+    _device = imgs.device
+    self.randconv.to(_device)
+    img_h, img_w = imgs.shape[2], imgs.shape[3]
+    num_stack_channel = imgs.shape[1]
+    num_batch = imgs.shape[0]
+    num_trans = num_batch
+    batch_size = int(num_batch / num_trans)
+
+    for trans_index in range(num_trans):
+        temp_imgs = imgs[trans_index*batch_size:(trans_index+1)*batch_size]
+        temp_imgs = temp_imgs.reshape(-1, 3, img_h, img_w) # (batch x stack, channel, h, w)
+        with torch.no_grad():
+            rand_out = self.randconv(temp_imgs)
+        if trans_index == 0:
+            total_out = rand_out
+        else:
+            total_out = torch.cat((total_out, rand_out), 0)
+    total_out = total_out.reshape(-1, num_stack_channel, img_h, img_w)
+    return total_out
 
 # Define environment
 # check the utils.py file for info on arguments
@@ -152,16 +179,17 @@ step = 0
 total_training_reward = []
 total_val_reward = []
 
-augmentation="RIP og det var det"
+augmentation="rand_conv"
 
 while step < total_steps:
+  randConvGenerator = RandConv(num_batch=64)
   val_reward = []
   # Use policy to collect data for num_steps steps
   policy.eval()
   for _ in range(num_steps):
     # apply data augmentation
     if augmentation == "rand_conv":
-      obs = random_convolution(obs)
+      obs = randConvGenerator.RandomConvolution(obs)
     # Use policy
     action, log_prob, value = policy.act(obs)
     
@@ -193,7 +221,7 @@ while step < total_steps:
 
       # apply data augmentation
       if augmentation == "rand_conv":
-        b_obs = random_convolution(b_obs)
+        b_obs = randConvGenerator.RandomConvolution(b_obs)
 
       # Get current policy outputs
       new_dist, new_value = policy(b_obs)
@@ -226,12 +254,10 @@ while step < total_steps:
   step += num_envs * num_steps
 
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
-    torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
-    env = make_env(n_envs=num_envs,env_name='coinrun',num_levels=num_levels)
-    obs = env.reset()
+    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
+    torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
 
 print('Completed training!')
 
-torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_v2.pt')
-torch.save(total_training_reward, 'trainingResults/training_Reward_IMPALA_proc_v2.pt')
+torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
+torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
