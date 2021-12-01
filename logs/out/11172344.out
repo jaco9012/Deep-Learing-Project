@@ -1,0 +1,166 @@
+Mon Nov 29 23:01:34 2021       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 495.44       Driver Version: 495.44       CUDA Version: 11.5     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla V100-PCIE...  On   | 00000000:AF:00.0 Off |                    0 |
+| N/A   34C    P0    23W / 250W |      0MiB / 16160MiB |      0%   E. Process |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+/appl/cuda/10.2/samples/NVIDIA_CUDA-10.2_Samples/bin/x86_64/linux/release/deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Detected 1 CUDA Capable device(s)
+
+Device 0: "Tesla V100-PCIE-16GB"
+  CUDA Driver Version / Runtime Version          11.5 / 10.2
+  CUDA Capability Major/Minor version number:    7.0
+  Total amount of global memory:                 16160 MBytes (16945512448 bytes)
+  (80) Multiprocessors, ( 64) CUDA Cores/MP:     5120 CUDA Cores
+  GPU Max Clock rate:                            1380 MHz (1.38 GHz)
+  Memory Clock rate:                             877 Mhz
+  Memory Bus Width:                              4096-bit
+  L2 Cache Size:                                 6291456 bytes
+  Maximum Texture Dimension Size (x,y,z)         1D=(131072), 2D=(131072, 65536), 3D=(16384, 16384, 16384)
+  Maximum Layered 1D Texture Size, (num) layers  1D=(32768), 2048 layers
+  Maximum Layered 2D Texture Size, (num) layers  2D=(32768, 32768), 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 65536
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  2048
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)
+  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 7 copy engine(s)
+  Run time limit on kernels:                     No
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support:                        Enabled
+  Device supports Unified Addressing (UVA):      Yes
+  Device supports Compute Preemption:            Yes
+  Supports Cooperative Kernel Launch:            Yes
+  Supports MultiDevice Co-op Kernel Launch:      Yes
+  Device PCI Domain ID / Bus ID / location ID:   0 / 175 / 0
+  Compute Mode:
+     < Exclusive Process (many threads in one process is able to use ::cudaSetDevice() with this device) >
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 11.5, CUDA Runtime Version = 10.2, NumDevs = 1
+Result = PASS
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: procgen in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from -r requirements.txt (line 1)) (0.10.4)
+Collecting torch
+  Using cached torch-1.10.0-cp37-cp37m-manylinux1_x86_64.whl (881.9 MB)
+Collecting labml_nn
+  Using cached labml_nn-0.4.117-py3-none-any.whl (311 kB)
+Requirement already satisfied: numpy<2.0.0,>=1.17.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from procgen->-r requirements.txt (line 1)) (1.21.4)
+Requirement already satisfied: gym3<1.0.0,>=0.3.3 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from procgen->-r requirements.txt (line 1)) (0.3.3)
+Requirement already satisfied: filelock<4.0.0,>=3.0.0 in /appl/python/3.7.11/lib/python3.7/site-packages (from procgen->-r requirements.txt (line 1)) (3.0.12)
+Requirement already satisfied: gym<1.0.0,>=0.15.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from procgen->-r requirements.txt (line 1)) (0.21.0)
+Collecting importlib-metadata>=4.8.1
+  Using cached importlib_metadata-4.8.2-py3-none-any.whl (17 kB)
+Requirement already satisfied: cloudpickle>=1.2.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from gym<1.0.0,>=0.15.0->procgen->-r requirements.txt (line 1)) (2.0.0)
+Requirement already satisfied: glfw<2.0.0,>=1.8.6 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (1.12.0)
+Requirement already satisfied: cffi<2.0.0,>=1.13.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (1.15.0)
+Requirement already satisfied: moderngl<6.0.0,>=5.5.4 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (5.6.4)
+Requirement already satisfied: imageio<3.0.0,>=2.6.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (2.10.3)
+Requirement already satisfied: imageio-ffmpeg<0.4.0,>=0.3.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (0.3.0)
+Requirement already satisfied: pycparser in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from cffi<2.0.0,>=1.13.0->gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (2.21)
+Requirement already satisfied: pillow>=8.3.2 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from imageio<3.0.0,>=2.6.0->gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (8.4.0)
+Requirement already satisfied: typing-extensions>=3.6.4 in /appl/python/3.7.11/lib/python3.7/site-packages (from importlib-metadata>=4.8.1->gym<1.0.0,>=0.15.0->procgen->-r requirements.txt (line 1)) (3.10.0.0)
+Requirement already satisfied: zipp>=0.5 in /appl/python/3.7.11/lib/python3.7/site-packages (from importlib-metadata>=4.8.1->gym<1.0.0,>=0.15.0->procgen->-r requirements.txt (line 1)) (3.5.0)
+Requirement already satisfied: glcontext<3,>=2 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from moderngl<6.0.0,>=5.5.4->gym3<1.0.0,>=0.3.3->procgen->-r requirements.txt (line 1)) (2.3.4)
+Collecting labml-helpers>=0.4.84
+  Using cached labml_helpers-0.4.84-py3-none-any.whl (18 kB)
+Collecting labml>=0.4.133
+  Using cached labml-0.4.134-py3-none-any.whl (121 kB)
+Collecting torchvision
+  Using cached torchvision-0.11.1-cp37-cp37m-manylinux1_x86_64.whl (23.3 MB)
+Collecting einops
+  Using cached einops-0.3.2-py3-none-any.whl (25 kB)
+Collecting torchtext
+  Using cached torchtext-0.11.0-cp37-cp37m-manylinux1_x86_64.whl (8.0 MB)
+Collecting gitpython
+  Using cached GitPython-3.1.24-py3-none-any.whl (180 kB)
+Collecting pyyaml
+  Using cached PyYAML-6.0-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (596 kB)
+Collecting gitdb<5,>=4.0.1
+  Using cached gitdb-4.0.9-py3-none-any.whl (63 kB)
+Collecting smmap<6,>=3.0.1
+  Using cached smmap-5.0.0-py3-none-any.whl (24 kB)
+Collecting tqdm
+  Using cached tqdm-4.62.3-py2.py3-none-any.whl (76 kB)
+Collecting requests
+  Using cached requests-2.26.0-py2.py3-none-any.whl (62 kB)
+Collecting charset-normalizer~=2.0.0
+  Downloading charset_normalizer-2.0.8-py3-none-any.whl (39 kB)
+Collecting certifi>=2017.4.17
+  Downloading certifi-2021.10.8-py2.py3-none-any.whl (149 kB)
+Collecting urllib3<1.27,>=1.21.1
+  Using cached urllib3-1.26.7-py2.py3-none-any.whl (138 kB)
+Collecting idna<4,>=2.5
+  Using cached idna-3.3-py3-none-any.whl (61 kB)
+Installing collected packages: smmap, gitdb, urllib3, pyyaml, idna, gitpython, charset-normalizer, certifi, tqdm, torch, requests, labml, importlib-metadata, torchvision, torchtext, labml-helpers, einops, labml-nn
+Successfully installed certifi-2021.10.8 charset-normalizer-2.0.8 einops-0.3.2 gitdb-4.0.9 gitpython-3.1.24 idna-3.3 importlib-metadata-4.8.2 labml-0.4.134 labml-helpers-0.4.84 labml-nn-0.4.117 pyyaml-6.0 requests-2.26.0 smmap-5.0.0 torch-1.10.0 torchtext-0.11.0 torchvision-0.11.1 tqdm-4.62.3 urllib3-1.26.7
+Observation space: Box([[[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]
+
+ [[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]
+
+ [[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]], [[[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]
+
+ [[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]
+
+ [[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]], (3, 64, 64), float32)
+Action space: 15
+Completed training!
