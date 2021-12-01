@@ -38,4 +38,4 @@ module load cuda/10.2
 
 /appl/cuda/10.2/samples/NVIDIA_CUDA-10.2_Samples/bin/x86_64/linux/release/deviceQuery
 python3 -m pip install -r requirements.txt
-python3 IMPALA_rand_conv.py
+python3 IMPALA_RAND_CONV.py
