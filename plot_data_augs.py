@@ -98,6 +98,7 @@ def get_numpy(x):
         return x.cpu().data.numpy()
     return x.data.numpy()
 
+
 test = get_numpy(obs*255)
 test
 test = test.astype(np.uint8)
@@ -115,4 +116,5 @@ end = time()
 gpu_time = end-start
 print('GPU time',gpu_time)
 
+show_imgs(test, max_display=1)
 show_stacked_imgs(randconv_test.data.cpu().numpy(), max_display=9)

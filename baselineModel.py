@@ -17,11 +17,11 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
 savename="baseline.pt"
-total_steps = 20e6
+total_steps = 1e4
 num_envs = 64
 num_levels = 0 # 0 = unlimited levels
 num_steps = 256
-num_epochs = 3
+num_epochs = 1
 batch_size = 512
 eps = .2
 eps_end = 0.05
