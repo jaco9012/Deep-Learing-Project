@@ -14,19 +14,22 @@ from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
-total_steps = 25e6
+savename="baseline.pt"
+total_steps = 20e6
 num_envs = 64
-num_levels = 200
+num_levels = 0 # 0 = unlimited levels
 num_steps = 256
 num_epochs = 3
 batch_size = 512
 eps = .2
+eps_end = 0.05
+eps_start = 0.9
+eps_decay = 10e6
 grad_eps = .5
 clip_value = .2
 value_coef = .5
 entropy_coef = .01
 gamma = 0.999
-
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -59,9 +62,24 @@ class Policy(nn.Module):
       x = x.cuda().contiguous()
       dist, value = self.forward(x)
       action = dist.sample()
-      log_prob = dist.log_prob(action)
-    
+      log_prob = dist.log_prob(action)    
     return action.cpu(), log_prob.cpu(), value.cpu()
+
+  def act_gready(self, x):
+    with torch.no_grad():
+      x = x.cuda().contiguous()
+      dist, value = self.forward(x)
+      action = torch.argmax(dist.probs,dim=1)
+      log_prob = dist.log_prob(action)
+    return action.cpu(), log_prob.cpu(), value.cpu()
+
+  def select_act(self, x, eps_end, eps_start, eps_decay, step):
+    sample = random()
+    eps_threshold = eps_end + (eps_start - eps_end) * exp(-1 * step / eps_decay)
+    if sample > eps_threshold:
+      return self.act_gready(x) 
+    else:
+      return self.act(x)
 
   def forward(self, x):
     x = self.encoder(x)
@@ -103,17 +121,19 @@ clipped_value_loss = ClippedValueFunctionLoss()
 obs = env.reset()
 step = 0
 total_training_reward = []
+total_val_reward = []
 
 while step < total_steps:
-
+  train_reward = []
   # Use policy to collect data for num_steps steps
   policy.eval()
   for _ in range(num_steps):
     # Use policy
-    action, log_prob, value = policy.act(obs)
+    action, log_prob, value = policy.select_act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
     
     # Take step in environment
     next_obs, reward, done, info = env.step(action)
+    train_reward.append(torch.Tensor(reward))
 
     # Store data
     storage.store(obs, action, reward, done, info, log_prob, value)
@@ -122,7 +142,7 @@ while step < total_steps:
     obs = next_obs
 
   # Add the last observation to collected data
-  _, _, value = policy.act(obs)
+  _, _, value = policy.select_act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
   storage.store_last(obs, value)
 
   # Compute return and advantage
@@ -163,12 +183,36 @@ while step < total_steps:
       optimizer.zero_grad()
 
   # Update stats
-  total_training_reward.append(storage.get_reward())
+  total_training_reward.append(torch.stack(train_reward).sum(0).mean(0))
   step += num_envs * num_steps
+
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/baseline_proc.pt')
-    torch.save(total_training_reward, 'trainingResults/training_Reward_proc.pt')
+    # Make evaluation environment
+    eval_env = make_env(num_envs, num_levels=0, env_name='coinrun')
+    eval_obs = eval_env.reset()
+
+    val_reward = []
+    # Evaluate policy
+    policy.eval()
+    for _ in range(512):
+
+      # Use policy
+      eval_action, eval_log_prob, eval_value = policy.act(eval_obs)
+
+      # Take step in environment
+      eval_obs, eval_reward, eval_done, eval_info = eval_env.step(eval_action)
+      val_reward.append(torch.Tensor(eval_reward))
+
+    # Calculate average return
+    total_val_reward = torch.stack(val_reward).sum(0).mean(0)
+    print('Step:', step, ' Average return:', total_val_reward)
+
+    torch.save(policy.state_dict(), 'checkpoints/' + savename)
+    torch.save(total_training_reward, 'trainingResults/training_Reward_' + savename)
+    torch.save(total_val_reward, 'trainingResults/validation_Reward_' + savename)
 
 print('Completed training!')
-#torch.save(policy.state_dict(), 'checkpoints/checkpoint.pt')
-#torch.save(total_training_reward, 'trainingResults/training_Reward.pt')
+
+torch.save(policy.state_dict(), 'checkpoints/' + savename)
+torch.save(total_training_reward, 'trainingResults/training_Reward_' + savename)
+torch.save(total_val_reward, 'trainingResults/validation_Reward_' + savename)

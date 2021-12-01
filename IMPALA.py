@@ -5,7 +5,6 @@
 # while policy and value functions are linear projections from the encodings. There is plenty of opportunity to experiment with architectures,
 # so feel free to do that! Perhaps implement the `Impala` encoder from [this paper](https://arxiv.org/pdf/1802.01561.pdf) (perhaps minus the LSTM).
 
-
 from math import sqrt, exp
 from random import random, sample
 import torch
@@ -14,9 +13,9 @@ import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
-
-
 # Hyperparameters
+augmentation="rand_conv"
+savename="IMPALA_rand_conv.pt"
 total_steps = 20e6
 num_envs = 64
 num_levels = 0 # 0 = unlimited levels
@@ -32,8 +31,6 @@ clip_value = .2
 value_coef = .5
 entropy_coef = .01
 gamma = 0.999
-
-
 
 class Flatten(nn.Module):
     def forward(self, x):
@@ -97,7 +94,7 @@ class Policy(nn.Module):
     with torch.no_grad():
       x = x.cuda().contiguous()
       dist, value = self.forward(x)
-      action = torch.argmax(dist)
+      action = torch.argmax(dist.probs,dim=1)
       log_prob = dist.log_prob(action)
     return action.cpu(), log_prob.cpu(), value.cpu()
 
@@ -179,11 +176,9 @@ step = 0
 total_training_reward = []
 total_val_reward = []
 
-augmentation="rand_conv"
-
 while step < total_steps:
   randConvGenerator = RandConv(num_batch=64)
-  val_reward = []
+  train_reward = []
   # Use policy to collect data for num_steps steps
   policy.eval()
   for _ in range(num_steps):
@@ -191,11 +186,11 @@ while step < total_steps:
     if augmentation == "rand_conv":
       obs = randConvGenerator.RandomConvolution(obs)
     # Use policy
-    action, log_prob, value = policy.act(obs)
+    action, log_prob, value = policy.select_act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
     
     # Take step in environment
     next_obs, reward, done, info = env.step(action)
-    val_reward.append(torch.Tensor(reward))
+    train_reward.append(torch.Tensor(reward))
 
     # Store data
     storage.store(obs, action, reward, done, info, log_prob, value)
@@ -204,7 +199,7 @@ while step < total_steps:
     obs = next_obs
 
   # Add the last observation to collected data
-  _, _, value = policy.act(obs)
+  _, _, value = policy.select_act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
   storage.store_last(obs, value)
 
   # Compute return and advantage
@@ -218,10 +213,6 @@ while step < total_steps:
     generator = storage.get_generator(batch_size)
     for batch in generator:
       b_obs, b_action, b_log_prob, b_value, b_returns, b_advantage = batch
-
-      # apply data augmentation
-      if augmentation == "rand_conv":
-        b_obs = randConvGenerator.RandomConvolution(b_obs)
 
       # Get current policy outputs
       new_dist, new_value = policy(b_obs)
@@ -249,17 +240,36 @@ while step < total_steps:
       optimizer.zero_grad()
 
   # Update stats
-  # total_training_reward.append(storage.get_reward())
-  total_val_reward.append(torch.stack(val_reward).sum(0).mean(0))
+  total_training_reward.append(torch.stack(train_reward).sum(0).mean(0))
   step += num_envs * num_steps
 
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
-    torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
-    torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
+    # Make evaluation environment
+    eval_env = make_env(num_envs, num_levels=0, env_name='coinrun')
+    eval_obs = eval_env.reset()
 
-    
+    val_reward = []
+    # Evaluate policy
+    policy.eval()
+    for _ in range(512):
+
+      # Use policy
+      eval_action, eval_log_prob, eval_value = policy.act(eval_obs)
+
+      # Take step in environment
+      eval_obs, eval_reward, eval_done, eval_info = eval_env.step(eval_action)
+      val_reward.append(torch.Tensor(eval_reward))
+
+    # Calculate average return
+    total_val_reward = torch.stack(val_reward).sum(0).mean(0)
+    print('Step:', step, ' Average return:', total_val_reward)
+
+    torch.save(policy.state_dict(), 'checkpoints/' + savename)
+    torch.save(total_training_reward, 'trainingResults/training_Reward_' + savename)
+    torch.save(total_val_reward, 'trainingResults/validation_Reward_' + savename)
 
 print('Completed training!')
 
-torch.save(policy.state_dict(), 'checkpoints/IMPALA_proc_rand_conv.pt')
-torch.save(total_val_reward, 'trainingResults/training_Reward_IMPALA_rand_conv.pt')
+torch.save(policy.state_dict(), 'checkpoints/' + savename)
+torch.save(total_training_reward, 'trainingResults/training_Reward_' + savename)
+torch.save(total_val_reward, 'trainingResults/validation_Reward_' + savename)
