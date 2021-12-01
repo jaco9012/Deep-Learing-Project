@@ -45,7 +45,7 @@ policy.load_state_dict(torch.load('checkpoints/baseline_proc.pt'))
 
 # Make evaluation environment
 eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun')
-obs = eval_env.reset()
+eval_obs = eval_env.reset()
 
 frames = []
 total_reward = []
@@ -56,10 +56,10 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act(obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
-  obs, reward, done, info = eval_env.step(action)
+  eval_obs, reward, done, info = eval_env.step(action)
   val_reward.append(torch.Tensor(reward))
 
   # Render environment and store
