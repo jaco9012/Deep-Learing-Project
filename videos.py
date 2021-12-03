@@ -9,9 +9,9 @@ from math import sqrt, exp
 from random import random, sample
 
 # Models to make videos for
-savename_baseline="baseline"
-savename_IMPALA="IMPALA"
-savename_IMPALA_rand_conv="IMPALA_rand_conv"
+savename_baseline="baseline_v2"
+savename_IMPALA="IMPALA_v2"
+savename_IMPALA_rand_conv="IMPALA_rand_conv_v2"
 
 # Hyperparameters
 num_envs = 64
