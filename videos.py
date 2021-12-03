@@ -9,9 +9,9 @@ from math import sqrt, exp
 from random import random, sample
 
 # Models to make videos for
-savename_baseline="baseline.pt"
-savename_IMPALA="IMPALA.pt"
-savename_IMPALA_rand_conv="IMPALA_rand_conv.pt"
+savename_baseline="baseline"
+savename_IMPALA="IMPALA"
+savename_IMPALA_rand_conv="IMPALA_rand_conv"
 
 # Hyperparameters
 num_envs = 64
@@ -119,7 +119,7 @@ print('Average return:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('videos/' + savename_baseline + 'mp4', frames, fps=25)
+imageio.mimsave('videos/' + savename_baseline + '.mp4', frames, fps=25)
 
 
 
