@@ -15,7 +15,7 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
 augmentation="rand_conv"
-savename="IMPALA_rand_conv.pt"
+savename="IMPALA_rand_conv_v2.pt"
 total_steps = 20e6
 num_envs = 64
 num_levels = 0 # 0 = unlimited levels
