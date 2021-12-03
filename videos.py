@@ -103,7 +103,7 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act_greedy(eval_obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
   eval_obs, reward, done, info = eval_env.step(action)
@@ -226,7 +226,7 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act_greedy(eval_obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
   eval_obs, reward, done, info = eval_env.step(action)
@@ -378,7 +378,7 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act_greedy(eval_obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
   eval_obs, reward, done, info = eval_env.step(action)
