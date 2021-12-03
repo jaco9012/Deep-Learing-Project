@@ -8,7 +8,7 @@ from utils import make_env, Storage, orthogonal_init
 
 
 # Models to make plots for
-savename_baseline="baseline_v2"
+savename_baseline="baseline_v3"
 savename_IMPALA="IMPALA_v2"
 savename_IMPALA_rand_conv="IMPALA_rand_conv_v2"
 
