@@ -19,7 +19,7 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 savename="baseline_v2.pt"
 total_steps = 20e6
 num_envs = 64
-num_levels = 0 # 0 = unlimited levels
+num_levels = 200 # 0 = unlimited levels
 num_steps = 256
 num_epochs = 3
 batch_size = 512
