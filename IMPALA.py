@@ -186,7 +186,7 @@ while step < total_steps:
     if augmentation == "rand_conv":
       obs = randConvGenerator.RandomConvolution(obs)
     # Use policy
-    action, log_prob, value = policy.act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
+    action, log_prob, value = policy.act(obs) #,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
     
     # Take step in environment
     next_obs, reward, done, info = env.step(action)
@@ -199,7 +199,7 @@ while step < total_steps:
     obs = next_obs
 
   # Add the last observation to collected data
-  _, _, value = policy.act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
+  _, _, value = policy.act(obs) #,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
   storage.store_last(obs, value)
 
   # Compute return and advantage
@@ -254,7 +254,7 @@ while step < total_steps:
     for _ in range(512):
 
       # Use policy
-      eval_action, eval_log_prob, eval_value = policy.act_greedy(eval_obs)
+      eval_action, eval_log_prob, eval_value = policy.act(eval_obs)
 
       # Take step in environment
       eval_obs, eval_reward, eval_done, eval_info = eval_env.step(eval_action)
