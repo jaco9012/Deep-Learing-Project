@@ -90,7 +90,7 @@ class Policy(nn.Module):
       log_prob = dist.log_prob(action)    
     return action.cpu(), log_prob.cpu(), value.cpu()
 
-  def act_gready(self, x):
+  def act_greedy(self, x):
     with torch.no_grad():
       x = x.cuda().contiguous()
       dist, value = self.forward(x)
@@ -102,7 +102,7 @@ class Policy(nn.Module):
     sample = random()
     eps_threshold = eps_end + (eps_start - eps_end) * exp(-1 * step / eps_decay)
     if sample > eps_threshold:
-      return self.act_gready(x) 
+      return self.act_greedy(x) 
     else:
       return self.act(x)
 
@@ -254,7 +254,7 @@ while step < total_steps:
     for _ in range(512):
 
       # Use policy
-      eval_action, eval_log_prob, eval_value = policy.act_gready(eval_obs)
+      eval_action, eval_log_prob, eval_value = policy.act_greedy(eval_obs)
 
       # Take step in environment
       eval_obs, eval_reward, eval_done, eval_info = eval_env.step(eval_action)
