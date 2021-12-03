@@ -9,9 +9,9 @@ from math import sqrt, exp
 from random import random, sample
 
 # Models to make videos for
-savename_baseline="baseline"
-savename_IMPALA="IMPALA"
-savename_IMPALA_rand_conv="IMPALA_rand_conv"
+savename_baseline="baseline_v2"
+savename_IMPALA="IMPALA_v2"
+savename_IMPALA_rand_conv="IMPALA_rand_conv_v2"
 
 # Hyperparameters
 num_envs = 64
@@ -103,7 +103,7 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act_greedy(eval_obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
   eval_obs, reward, done, info = eval_env.step(action)
@@ -115,7 +115,7 @@ for _ in range(512):
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
-print('Average return:', total_reward)
+print('Average return baseline:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
@@ -226,7 +226,7 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act_greedy(eval_obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
   eval_obs, reward, done, info = eval_env.step(action)
@@ -238,7 +238,7 @@ for _ in range(512):
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
-print('Average return:', total_reward)
+print('Average return IMPALA:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
@@ -378,7 +378,7 @@ policy.eval()
 for _ in range(512):
 
   # Use policy
-  action, log_prob, value = policy.act_greedy(eval_obs)
+  action, log_prob, value = policy.act(eval_obs)
 
   # Take step in environment
   eval_obs, reward, done, info = eval_env.step(action)
@@ -390,7 +390,7 @@ for _ in range(512):
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
-print('Average return:', total_reward)
+print('Average return IMPALA rand conv:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
