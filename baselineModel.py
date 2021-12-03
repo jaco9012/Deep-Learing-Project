@@ -131,7 +131,7 @@ while step < total_steps:
   policy.eval()
   for _ in range(num_steps):
     # Use policy
-    action, log_prob, value = policy.select_act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
+    action, log_prob, value = policy.act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
     
     # Take step in environment
     next_obs, reward, done, info = env.step(action)
@@ -144,7 +144,7 @@ while step < total_steps:
     obs = next_obs
 
   # Add the last observation to collected data
-  _, _, value = policy.select_act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
+  _, _, value = policy.act(obs,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
   storage.store_last(obs, value)
 
   # Compute return and advantage
