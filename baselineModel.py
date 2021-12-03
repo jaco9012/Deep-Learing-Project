@@ -31,7 +31,7 @@ grad_eps = .5
 clip_value = .2
 value_coef = .5
 entropy_coef = .01
-gamma = 0.999
+gamma = 0.99
 
 class Flatten(nn.Module):
     def forward(self, x):
