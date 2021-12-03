@@ -254,7 +254,7 @@ while step < total_steps:
     for _ in range(512):
 
       # Use policy
-      eval_action, eval_log_prob, eval_value = policy.act(eval_obs)
+      eval_action, eval_log_prob, eval_value = policy.act_gready(eval_obs)
 
       # Take step in environment
       eval_obs, eval_reward, eval_done, eval_info = eval_env.step(eval_action)
