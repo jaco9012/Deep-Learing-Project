@@ -15,7 +15,7 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
 augmentation="rand_conv"
-savename="IMPALA_rand_conv.pt"
+savename="IMPALA_rand_conv_v2.pt"
 total_steps = 20e6
 num_envs = 64
 num_levels = 0 # 0 = unlimited levels
@@ -254,14 +254,14 @@ while step < total_steps:
     for _ in range(512):
 
       # Use policy
-      eval_action, eval_log_prob, eval_value = policy.act(eval_obs)
+      eval_action, eval_log_prob, eval_value = policy.act_gready(eval_obs)
 
       # Take step in environment
       eval_obs, eval_reward, eval_done, eval_info = eval_env.step(eval_action)
       val_reward.append(torch.Tensor(eval_reward))
 
     # Calculate average return
-    total_val_reward = torch.stack(val_reward).sum(0).mean(0)
+    total_val_reward.append(torch.stack(val_reward).sum(0).mean(0))
     print('Step:', step, ' Average return:', total_val_reward)
 
     torch.save(policy.state_dict(), 'checkpoints/' + savename)

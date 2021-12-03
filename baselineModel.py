@@ -206,7 +206,7 @@ while step < total_steps:
       val_reward.append(torch.Tensor(eval_reward))
 
     # Calculate average return
-    total_val_reward = torch.stack(val_reward).sum(0).mean(0)
+    total_val_reward.append(torch.stack(val_reward).sum(0).mean(0))
     print('Step:', step, ' Average return:', total_val_reward)
 
     torch.save(policy.state_dict(), 'checkpoints/' + savename)
