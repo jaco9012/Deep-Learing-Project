@@ -5,6 +5,8 @@ import imageio
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import make_env, Storage, orthogonal_init
+from math import sqrt, exp
+from random import random, sample
 
 # Models to make videos for
 savename_baseline="baseline.pt"
