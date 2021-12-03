@@ -115,7 +115,7 @@ for _ in range(512):
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
-print('Average return:', total_reward)
+print('Average return baseline:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
@@ -238,7 +238,7 @@ for _ in range(512):
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
-print('Average return:', total_reward)
+print('Average return IMPALA:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
@@ -390,7 +390,7 @@ for _ in range(512):
 
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
-print('Average return:', total_reward)
+print('Average return IMPALA rand conv:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
