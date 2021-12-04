@@ -100,3 +100,55 @@ Requirement already satisfied: idna<4,>=2.5 in /zhome/ab/5/122123/.local/lib/pyt
 Requirement already satisfied: charset-normalizer~=2.0.0 in /zhome/ab/5/122123/.local/lib/python3.7/site-packages (from requests->torchtext->labml_nn->-r requirements.txt (line 3)) (2.0.8)
 Installing collected packages: importlib-metadata
 Successfully installed importlib-metadata-4.8.2
+Observation space: Box([[[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]
+
+ [[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]
+
+ [[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]], [[[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]
+
+ [[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]
+
+ [[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]], (3, 64, 64), float32)
+Action space: 15
+Step: 999424  Average return: [tensor(1.8750)]
+Step: 1998848  Average return: [tensor(1.8750), tensor(2.5000)]
+Step: 2998272  Average return: [tensor(1.8750), tensor(2.5000), tensor(4.0625)]
+Step: 3997696  Average return: [tensor(1.8750), tensor(2.5000), tensor(4.0625), tensor(3.2812)]
+Step: 4997120  Average return: [tensor(1.8750), tensor(2.5000), tensor(4.0625), tensor(3.2812), tensor(0.)]
+Step: 5996544  Average return: [tensor(1.8750), tensor(2.5000), tensor(4.0625), tensor(3.2812), tensor(0.), tensor(0.)]
