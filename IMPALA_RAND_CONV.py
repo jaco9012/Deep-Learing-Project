@@ -15,13 +15,13 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
 augmentation="rand_conv"
-savename="IMPALA_rand_conv_v4.pt"
+savename="IMPALA_rand_conv_v5.pt"
 total_steps = 20e6
 num_envs = 64
 num_levels = 200 # 0 = unlimited levels
 num_steps = 256
 num_epochs = 3
-batch_size = 512
+batch_size = 8
 eps = .2
 eps_end = 0.05
 eps_start = 0.9
