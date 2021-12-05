@@ -105,16 +105,22 @@ test = test.astype(np.uint8)
 
 stacked_test = np.concatenate([test,test,test],1)
 stacked_test.shape
+test.shape
 
 device = torch.device('cuda')
 in_stacked_test = torch.from_numpy(stacked_test).to(device)
+in_test = torch.from_numpy(test).to(device)
 in_stacked_test= in_stacked_test / 255.0
+in_test = in_test / 255.0
 
 start = time()
-randconv_test = random_convolution(in_stacked_test, num_trans=in_stacked_test.shape[0])
+randconv_test = random_convolution(in_test, num_trans=in_test.shape[0])
+randconv_test2 = random_convolution(in_stacked_test, num_trans=in_stacked_test.shape[0])
 end = time()
 gpu_time = end-start
 print('GPU time',gpu_time)
 
-show_imgs(test, max_display=1)
+
+show_imgs(test, max_display=9)
 show_stacked_imgs(randconv_test.data.cpu().numpy(), max_display=9)
+
