@@ -8,9 +8,10 @@ from utils import make_env, Storage, orthogonal_init
 
 
 # Models to make plots for
-savename_baseline="baseline_v4"
-savename_IMPALA="IMPALA_v4"
-savename_IMPALA_rand_conv="IMPALA_rand_conv_v4"
+savename_baseline="baseline_v6"
+savename_IMPALA="IMPALA_v6"
+savename_IMPALA_rand_conv="IMPALA_rand_conv_v6"
+savename_results="resultsv6"
 
 # plot results
 def moving_average(a, n=10) :
@@ -30,18 +31,17 @@ total_validation_reward_baseline = torch.load('trainingResults/validation_Reward
 total_validation_reward_IMPALA = torch.load('trainingResults/validation_Reward_' + savename_IMPALA + '.pt')
 total_validation_reward_rand_conv = torch.load('trainingResults/validation_Reward_' + savename_IMPALA_rand_conv + '.pt')
 
-x_val_baseline = range(8192*2, (len(total_validation_reward_baseline)+1)*8192*2, 8192*2)
-x_val_IMPALA = range(8192*2, (len(total_validation_reward_IMPALA)+1)*8192*2, 8192*2)
-x_val_rand_conv = range(8192*2, (len(total_validation_reward_rand_conv)+1)*8192*2, 8192*2)
+x_val_baseline = range(8192*2, (len(total_validation_reward_baseline))*196608+8192*2, 196608)
+x_val_IMPALA = range(8192*2, (len(total_validation_reward_IMPALA))*196608+8192*2, 196608)
+x_val_rand_conv = range(8192*2, (len(total_validation_reward_rand_conv))*196608+8192*2, 196608)
 
-plt.figure(figsize=16,6)
-plt.subplots(nrows=3,ncols=1,sharex='col')
+plt.subplots(nrows=3,ncols=1,sharex='col', figsize=(12,6))
 # Baseline
 plt.subplot(3,1,1)
 plt.plot(x_train_baseline, total_training_reward_baseline, label='Total Training Reward')
 plt.plot(x_train_baseline,moving_average(total_training_reward_baseline), label = 'Moving Average')
 plt.plot(x_val_baseline, total_validation_reward_baseline, label='Total Validation Reward')
-plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.25), ncol=3, fancybox=True)
+plt.legend(loc='upper center', bbox_to_anchor=(0.5,1.3), ncol=3, fancybox=True)
 plt.title(label='Nature CNN', loc='left')
 plt.grid()
 # IMPALA
@@ -61,6 +61,8 @@ plt.xlabel('Time Steps')
 plt.title(label='IMPALA CNN + Rand. Conv.', loc='left')
 plt.xlim((0, max(x_train_baseline)*1.02))
 plt.grid()
+plt.tight_layout(h_pad=1.1)
+plt.savefig('videos/'+ savename_results + '.png', transparent=True)
 plt.show()
 
 
