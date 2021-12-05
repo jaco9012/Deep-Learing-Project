@@ -8,6 +8,9 @@ from utils import make_env, Storage, orthogonal_init
 from math import sqrt, exp
 from random import random, sample
 
+# background
+use_background = True
+
 # Models to make videos for
 savename_baseline="baseline_v5"
 savename_IMPALA="IMPALA_v5"
@@ -85,7 +88,7 @@ class Policy(nn.Module):
     return dist, value
 
 # Make evaluation environment
-eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun')
+eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun', use_backgrounds=use_background)
 eval_obs = eval_env.reset()
 
 # Define network
@@ -119,7 +122,10 @@ print('Average return baseline:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('videos/' + savename_baseline + '.mp4', frames, fps=25)
+if use_background == True:
+  imageio.mimsave('videos/' + savename_baseline + 'with background.mp4', frames, fps=25)
+else:
+  imageio.mimsave('videos/' + savename_baseline + '.mp4', frames, fps=25)
 
 
 
@@ -208,7 +214,7 @@ class Policy(nn.Module):
 
 
 # Make evaluation environment
-eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun')
+eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun', use_backgrounds=use_background)
 eval_obs = eval_env.reset()
 
 # Define network
@@ -242,8 +248,10 @@ print('Average return IMPALA:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('videos/' + savename_IMPALA + '.mp4', frames, fps=25)
-
+if use_background == True:
+  imageio.mimsave('videos/' + savename_IMPALA + 'with background.mp4', frames, fps=25)
+else:
+  imageio.mimsave('videos/' + savename_IMPALA + '.mp4', frames, fps=25)
 
 
 
@@ -360,7 +368,7 @@ class RandConv(nn.Module):
 
 
 # Make evaluation environment
-eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun')
+eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun', use_backgrounds=use_background)
 eval_obs = eval_env.reset()
 
 # Define network
@@ -394,8 +402,8 @@ print('Average return IMPALA rand conv:', total_reward)
 
 # Save frames as video
 frames = torch.stack(frames)
-imageio.mimsave('videos/' + savename_IMPALA_rand_conv + '.mp4', frames, fps=25)
-
-
-
-
+if use_background == True:
+  imageio.mimsave('videos/' + savename_IMPALA_rand_conv + 'with background.mp4', frames, fps=25)
+else:
+  imageio.mimsave('videos/' + savename_IMPALA_rand_conv + '.mp4', frames, fps=25)
+  
