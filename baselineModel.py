@@ -187,8 +187,7 @@ while step < total_steps:
 
   # Update stats
   total_training_reward.append(torch.stack(train_reward).sum(0).mean(0))
-  step += num_envs * num_steps
-
+  
   if(step % 196608 == 0): # we save every 1e6 ish timesteps
     # Make evaluation environment
     eval_env = make_env(num_envs, num_levels=0, env_name='coinrun', use_backgrounds=use_background)
@@ -197,7 +196,7 @@ while step < total_steps:
     val_reward = []
     # Evaluate policy
     policy.eval()
-    for _ in range(512):
+    for _ in range(num_steps):
 
       # Use policy
       eval_action, eval_log_prob, eval_value = policy.act(eval_obs)
@@ -209,6 +208,7 @@ while step < total_steps:
     # Calculate average return
     total_val_reward.append(torch.stack(val_reward).sum(0).mean(0))
     print('Step:', step, ' Average return:', total_val_reward)
+  step += num_envs * num_steps
   if(step % 999424 == 0): # we save every 1e6 ish timesteps
     torch.save(policy.state_dict(), 'checkpoints/' + savename)
     torch.save(total_training_reward, 'trainingResults/training_Reward_' + savename)
