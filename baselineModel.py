@@ -16,7 +16,7 @@ from utils import make_env, Storage, orthogonal_init
 from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
-savename="baseline_v5.pt"
+savename="baseline_v6.pt"
 use_background = True
 total_steps = 20e6
 num_envs = 64
