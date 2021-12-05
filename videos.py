@@ -4,6 +4,7 @@ import numpy as np
 import imageio
 import torch.nn as nn
 import torch.nn.functional as F
+import time
 from utils import make_env, Storage, orthogonal_init
 from math import sqrt, exp
 from random import random, sample
@@ -87,6 +88,8 @@ class Policy(nn.Module):
 
     return dist, value
 
+
+start = time.time()
 # Make evaluation environment
 eval_env = make_env(num_envs, start_level=num_levels, num_levels=0, env_name='coinrun', use_backgrounds=use_background)
 eval_obs = eval_env.reset()
@@ -119,7 +122,8 @@ for _ in range(512):
 # Calculate average return
 total_reward = torch.stack(val_reward).sum(0).mean(0)
 print('Average return baseline:', total_reward)
-
+stop = time.time()
+print(stop-start)
 # Save frames as video
 frames = torch.stack(frames)
 if use_background == True:
@@ -381,10 +385,13 @@ frames = []
 total_reward = []
 val_reward = []
 
+# define random conv
+randConvGenerator = RandConv(num_batch=64)
+
 # Evaluate policy
 policy.eval()
 for _ in range(512):
-
+  eval_obs = randConvGenerator.RandomConvolution(eval_obs)
   # Use policy
   action, log_prob, value = policy.act(eval_obs)
 
@@ -403,7 +410,7 @@ print('Average return IMPALA rand conv:', total_reward)
 # Save frames as video
 frames = torch.stack(frames)
 if use_background == True:
-  imageio.mimsave('videos/' + savename_IMPALA_rand_conv + 'with background.mp4', frames, fps=25)
+  imageio.mimsave('videos/' + savename_IMPALA_rand_conv + 'with background and rand conv.mp4', frames, fps=25)
 else:
   imageio.mimsave('videos/' + savename_IMPALA_rand_conv + '.mp4', frames, fps=25)
   

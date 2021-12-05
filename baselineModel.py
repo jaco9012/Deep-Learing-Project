@@ -17,6 +17,7 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
 savename="baseline_v5.pt"
+use_background = True
 total_steps = 20e6
 num_envs = 64
 num_levels = 200 # 0 = unlimited levels
@@ -188,9 +189,9 @@ while step < total_steps:
   total_training_reward.append(torch.stack(train_reward).sum(0).mean(0))
   step += num_envs * num_steps
 
-  if(step % 999424 == 0): # we save every 1e6 ish timesteps
+  if(step % 196608 == 0): # we save every 1e6 ish timesteps
     # Make evaluation environment
-    eval_env = make_env(num_envs, num_levels=0, env_name='coinrun')
+    eval_env = make_env(num_envs, num_levels=0, env_name='coinrun', use_backgrounds=use_background)
     eval_obs = eval_env.reset()
 
     val_reward = []
@@ -208,7 +209,7 @@ while step < total_steps:
     # Calculate average return
     total_val_reward.append(torch.stack(val_reward).sum(0).mean(0))
     print('Step:', step, ' Average return:', total_val_reward)
-
+  if(step % 999424 == 0): # we save every 1e6 ish timesteps
     torch.save(policy.state_dict(), 'checkpoints/' + savename)
     torch.save(total_training_reward, 'trainingResults/training_Reward_' + savename)
     torch.save(total_val_reward, 'trainingResults/validation_Reward_' + savename)
