@@ -23,7 +23,7 @@ num_envs = 64
 num_levels = 200 # 0 = unlimited levels
 num_steps = 256
 num_epochs = 3
-batch_size = 8
+batch_size = 512
 eps = .2
 eps_end = 0.05
 eps_start = 0.9
