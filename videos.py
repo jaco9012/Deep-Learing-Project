@@ -13,9 +13,9 @@ from random import random, sample
 use_background = True
 
 # Models to make videos for
-savename_baseline="baseline_v4"
-savename_IMPALA="IMPALA_v4"
-savename_IMPALA_rand_conv="IMPALA_rand_conv_v4"
+savename_baseline="baseline_v5"
+savename_IMPALA="IMPALA_v5"
+savename_IMPALA_rand_conv="IMPALA_rand_conv_v5"
 
 # Hyperparameters
 num_envs = 64
