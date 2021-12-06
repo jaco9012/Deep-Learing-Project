@@ -100,3 +100,61 @@ Requirement already satisfied: certifi>=2017.4.17 in /zhome/00/8/138461/.local/l
 Requirement already satisfied: idna<4,>=2.5 in /zhome/00/8/138461/.local/lib/python3.7/site-packages (from requests->torchtext->labml_nn->-r requirements.txt (line 3)) (3.3)
 Installing collected packages: importlib-metadata
 Successfully installed importlib-metadata-4.8.2
+Observation space: Box([[[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]
+
+ [[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]
+
+ [[0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  ...
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]
+  [0. 0. 0. ... 0. 0. 0.]]], [[[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]
+
+ [[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]
+
+ [[1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  ...
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]
+  [1. 1. 1. ... 1. 1. 1.]]], (3, 64, 64), float32)
+Action space: 15
+Step: 0  Average return: [tensor(1.0938)]
+Step: 196608  Average return: [tensor(1.0938), tensor(12.6562)]
+Step: 393216  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125)]
+Step: 589824  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875)]
+Step: 786432  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188)]
+Step: 983040  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938)]
+Step: 1179648  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938), tensor(12.3438)]
+Step: 1376256  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938), tensor(12.3438), tensor(6.7188)]
+Step: 1572864  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938), tensor(12.3438), tensor(6.7188), tensor(10.)]
+Step: 1769472  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938), tensor(12.3438), tensor(6.7188), tensor(10.), tensor(9.8438)]
+Step: 1966080  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938), tensor(12.3438), tensor(6.7188), tensor(10.), tensor(9.8438), tensor(9.6875)]
+Step: 2162688  Average return: [tensor(1.0938), tensor(12.6562), tensor(12.8125), tensor(12.1875), tensor(14.2188), tensor(13.5938), tensor(12.3438), tensor(6.7188), tensor(10.), tensor(9.8438), tensor(9.6875), tensor(14.5312)]
