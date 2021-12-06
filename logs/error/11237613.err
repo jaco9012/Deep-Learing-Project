@@ -30,23 +30,3 @@ root = None
 prefix = None
 WARNING: You are using pip version 21.1; however, version 21.3.1 is available.
 You should consider upgrading via the '/appl/python/3.7.11/bin/python3 -m pip install --upgrade pip' command.
-Traceback (most recent call last):
-  File "IMPALA_RAND_CONV.py", line 193, in <module>
-    next_obs, reward, done, info = env.step(action)
-  File "/zhome/ab/5/122123/proj/Deep-Learning-Project/utils.py", line 257, in step
-    return self.step_wait()
-  File "/zhome/ab/5/122123/proj/Deep-Learning-Project/utils.py", line 530, in step_wait
-    obs, reward, done, info = self.venv.step_wait()
-  File "/zhome/ab/5/122123/proj/Deep-Learning-Project/utils.py", line 512, in step_wait
-    obs, reward, done, info = self.venv.step_wait()
-  File "/zhome/ab/5/122123/proj/Deep-Learning-Project/utils.py", line 497, in step_wait
-    obs, reward, done, info = self.venv.step_wait()
-  File "/zhome/ab/5/122123/proj/Deep-Learning-Project/utils.py", line 465, in step_wait
-    obs, rews, news, infos = self.venv.step_wait()
-  File "/zhome/ab/5/122123/proj/Deep-Learning-Project/utils.py", line 338, in step_wait
-    obs, rews, dones, infos = self.venv.step_wait()
-  File "/zhome/ab/5/122123/.local/lib/python3.7/site-packages/gym3/interop.py", line 323, in step_wait
-    rew, ob, first = self.env.observe()
-  File "/zhome/ab/5/122123/.local/lib/python3.7/site-packages/gym3/libenv.py", line 345, in observe
-    self._c_lib.libenv_observe(self._c_env)
-KeyboardInterrupt
