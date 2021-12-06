@@ -23,17 +23,17 @@ total_training_reward_baseline = torch.load('trainingResults/training_Reward_' +
 total_training_reward_IMPALA = torch.load('trainingResults/training_Reward_' + savename_IMPALA + '.pt')
 total_training_reward_rand_conv = torch.load('trainingResults/training_Reward_' + savename_IMPALA_rand_conv + '.pt')
 
-x_train_baseline = range(8192*2, (len(total_training_reward_baseline)+1)*8192*2, 8192*2)
-x_train_IMPALA = range(8192*2, (len(total_training_reward_IMPALA)+1)*8192*2, 8192*2)
-x_train_rand_conv = range(8192*2, (len(total_training_reward_rand_conv)+1)*8192*2, 8192*2)
+x_train_baseline = range(0, (len(total_training_reward_baseline))*8192*2, 8192*2)
+x_train_IMPALA = range(0, (len(total_training_reward_IMPALA))*8192*2, 8192*2)
+x_train_rand_conv = range(0, (len(total_training_reward_rand_conv))*8192*2, 8192*2)
 
 total_validation_reward_baseline = torch.load('trainingResults/validation_Reward_' + savename_baseline + '.pt')
 total_validation_reward_IMPALA = torch.load('trainingResults/validation_Reward_' + savename_IMPALA + '.pt')
 total_validation_reward_rand_conv = torch.load('trainingResults/validation_Reward_' + savename_IMPALA_rand_conv + '.pt')
 
-x_val_baseline = range(8192*2, (len(total_validation_reward_baseline))*196608+8192*2, 196608)
-x_val_IMPALA = range(8192*2, (len(total_validation_reward_IMPALA))*196608+8192*2, 196608)
-x_val_rand_conv = range(8192*2, (len(total_validation_reward_rand_conv))*196608+8192*2, 196608)
+x_val_baseline = range(0, (len(total_validation_reward_baseline))*196608, 196608)
+x_val_IMPALA = range(0, (len(total_validation_reward_IMPALA))*196608, 196608)
+x_val_rand_conv = range(0, (len(total_validation_reward_rand_conv))*196608, 196608)
 
 plt.subplots(nrows=3,ncols=1,sharex='col', figsize=(12,6))
 # Baseline
