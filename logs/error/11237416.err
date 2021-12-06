@@ -30,3 +30,11 @@ root = None
 prefix = None
 WARNING: You are using pip version 21.1; however, version 21.3.1 is available.
 You should consider upgrading via the '/appl/python/3.7.11/bin/python3 -m pip install --upgrade pip' command.
+Traceback (most recent call last):
+  File "baselineModel.py", line 179, in <module>
+    loss.backward()
+  File "/zhome/00/8/138461/.local/lib/python3.7/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/zhome/00/8/138461/.local/lib/python3.7/site-packages/torch/autograd/__init__.py", line 156, in backward
+    allow_unreachable=True, accumulate_grad=True)  # allow_unreachable flag
+KeyboardInterrupt

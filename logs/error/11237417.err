@@ -30,3 +30,15 @@ root = None
 prefix = None
 WARNING: You are using pip version 21.1; however, version 21.3.1 is available.
 You should consider upgrading via the '/appl/python/3.7.11/bin/python3 -m pip install --upgrade pip' command.
+Traceback (most recent call last):
+  File "IMPALA.py", line 190, in <module>
+    action, log_prob, value = policy.act(obs) #,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
+  File "IMPALA.py", line 90, in act
+    action = dist.sample()
+  File "/zhome/00/8/138461/.local/lib/python3.7/site-packages/torch/distributions/categorical.py", line 111, in sample
+    probs_2d = self.probs.reshape(-1, self._num_events)
+  File "/zhome/00/8/138461/.local/lib/python3.7/site-packages/torch/distributions/utils.py", line 109, in __get__
+    with torch.enable_grad():
+  File "/zhome/00/8/138461/.local/lib/python3.7/site-packages/torch/autograd/grad_mode.py", line 169, in __enter__
+    torch._C._set_grad_enabled(True)
+KeyboardInterrupt
