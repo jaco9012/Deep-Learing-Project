@@ -15,7 +15,7 @@ from labml_nn.rl.ppo import ClippedPPOLoss, ClippedValueFunctionLoss
 
 # Hyperparameters
 augmentation="rand_conv"
-savename="IMPALA_rand_conv_v6.pt"
+savename="IMPALA_rand_conv_v8.pt"
 use_background = True
 total_steps = 20e6
 num_envs = 64
@@ -28,7 +28,7 @@ eps_end = 0.05
 eps_start = 0.9
 eps_decay = 10e6
 grad_eps = .5
-clip_value = .2
+clip_value = .1
 value_coef = .5
 entropy_coef = .01
 gamma = 0.99
