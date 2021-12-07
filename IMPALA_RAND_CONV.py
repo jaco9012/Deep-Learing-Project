@@ -178,14 +178,12 @@ total_training_reward = []
 total_val_reward = []
 
 while step < total_steps:
-  randConvGenerator = RandConv(num_batch=64)
+  
   train_reward = []
   # Use policy to collect data for num_steps steps
   policy.eval()
   for _ in range(num_steps):
-    # apply data augmentation
-    if augmentation == "rand_conv":
-      obs = randConvGenerator.RandomConvolution(obs)
+
     # Use policy
     action, log_prob, value = policy.act(obs) #,eps_end=eps_end,eps_start=eps_start, eps_decay=eps_decay,step=step)
     
@@ -213,7 +211,13 @@ while step < total_steps:
     # Iterate over batches of transitions
     generator = storage.get_generator(batch_size)
     for batch in generator:
+      # Generate random convolution
+      randConvGenerator = RandConv(num_batch=64)
+
       b_obs, b_action, b_log_prob, b_value, b_returns, b_advantage = batch
+
+      # apply data augmentation
+      b_obs = randConvGenerator.RandomConvolution(b_obs)
 
       # Get current policy outputs
       new_dist, new_value = policy(b_obs)
