@@ -10,7 +10,7 @@ from utils import make_env, Storage, orthogonal_init
 # Models to make plots for
 savename_baseline="baseline_v6"
 savename_IMPALA="IMPALA_v6"
-savename_IMPALA_rand_conv="IMPALA_rand_conv_v7"
+savename_IMPALA_rand_conv="IMPALA_rand_conv_v8"
 savename_results="resultsv7"
 
 # plot results
