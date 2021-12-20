@@ -12,7 +12,9 @@ The ability to generalize to new environments is to this day a challenging probl
 
 ## Milestones
 
-1. Make a simple functional model
-2. Optimize the model architecture
-3. Train a baseline model
-4. Optimize the model performance using data augmentation
+1. Make a simple functional model ✔️
+2. Optimize the model architecture ✔️
+3. Train a baseline model ✔️
+4. Optimize the model performance using a deeper network ✔️
+5. Optimize the model performance using data augmentation ✔️
+
