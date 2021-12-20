@@ -18,3 +18,5 @@ The ability to generalize to new environments is to this day a challenging probl
 4. Optimize the model performance using a deeper network ✔️
 5. Optimize the model performance using data augmentation ✔️
 
+## Main results
+The main results are visualized in [main_results.ipynb](https://github.com/jaco9012/Deep-Learning-Project/blob/main/main_results.ipynb).
